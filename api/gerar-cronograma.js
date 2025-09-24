@@ -76,41 +76,37 @@ OBS: as listas acima são amplas e devem ser utilizadas como fonte para gerar te
 
 Fim das instruções. Gere agora o JSON solicitado.
 `;
-try {
-    // Chama o Gemini
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
-      }
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('Erro no Gemini:', error);
-      return res.status(500).json({ error: 'Falha ao gerar cronograma' });
-    }
+ try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer AIML" // OPCIONAL: só se quiser melhor modelo
+      },
+      body: JSON.stringify({
+        model: "mistralai/mistral-7b-instruct:free", // modelo gratuito
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7
+      })
+    });
 
     const data = await response.json();
-    const output = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const output = data.choices?.[0]?.message?.content;
 
-    if (!output) {
-      return res.status(500).json({ error: 'Gemini não retornou resposta' });
-    }
+    if (!output) throw new Error("IA não retornou resposta");
 
-    // Extrai JSON
-    const jsonStart = output.indexOf('{');
-    const jsonEnd = output.lastIndexOf('}') + 1;
-    const jsonString = output.slice(jsonStart, jsonEnd);
-    const cronograma = JSON.parse(jsonString);
+    // Extrai JSON (mesmo que venha com markdown)
+    let jsonStr = output.trim();
+    if (jsonStr.startsWith("```json")) jsonStr = jsonStr.slice(7).split("```")[0];
+    else if (jsonStr.startsWith("```")) jsonStr = jsonStr.slice(3).split("```")[0];
 
-    res.status(200).json(cronograma);
+    const jsonStart = jsonStr.indexOf("{");
+    const jsonEnd = jsonStr.lastIndexOf("}") + 1;
+    const jsonString = jsonStr.slice(jsonStart, jsonEnd);
+
+    return JSON.parse(jsonString);
   } catch (error) {
-    console.error('Erro interno:', error);
-    res.status(500).json({ error: 'Erro ao processar requisição' });
+    console.error("Erro ao chamar IA:", error);
+    return null;
   }
 }
