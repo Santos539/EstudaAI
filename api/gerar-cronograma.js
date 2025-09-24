@@ -81,7 +81,7 @@ Fim das instruções. Gere agora o JSON solicitado.
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer AIML" // OPCIONAL: só se quiser melhor modelo
+        "Authorization": "Bearer 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" // OPCIONAL: só se quiser melhor modelo
       },
       body: JSON.stringify({
         model: "mistralai/mistral-7b-instruct:free", // modelo gratuito
