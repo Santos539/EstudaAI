@@ -76,46 +76,32 @@ OBS: as listas acima são amplas e devem ser utilizadas como fonte para gerar te
 
 Fim das instruções. Gere agora o JSON solicitado.
 `;
-
-  try {
-  const response = await fetch("https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta", {
+  // Chama o Groq (Llama 3) em vez da Hugging Face
+const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
   method: "POST",
   headers: {
-    "Authorization": `Bearer ${process.env.HF_TOKEN}`,
+    "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    inputs: prompt,
-    parameters: {
-      max_new_tokens: 800,
-      temperature: 0.7,
-      top_p: 0.95,
-      do_sample: true
-    }
+    model: "llama3-70b-8192",
+    messages: [
+      { role: "system", content: "Você é uma IA especialista em vestibulares. Responda APENAS com JSON válido." },
+      { role: "user", content: prompt }
+    ],
+    temperature: 0.7,
+    max_tokens: 1000
   })
 });
-  if (!response.ok) throw new Error('Erro na API');
 
-  const data = await response.json();
-  const output = data.generated_text || data[0]?.generated_text;
+if (!response.ok) throw new Error('Erro na API');
 
-  // Extrai JSON
-  const jsonStart = output.indexOf('{');
-  const jsonEnd = output.lastIndexOf('}') + 1;
-  const jsonString = output.slice(jsonStart, jsonEnd);
-  const cronograma = JSON.parse(jsonString);
+const data = await response.json();
+const output = data.choices[0].message.content;
 
-  res.status(200).json(cronograma);
-} catch (error) {
-  console.error("Erro:", error);
-  res.status(500).json({ error: "Falha ao gerar cronograma" });
-}
-}
-// Extrai JSON da resposta
+// Extrai JSON (mesmo se tiver markdown)
 let jsonString = output.trim();
-
 if (jsonString.startsWith("```json")) {
-  // Remove markdown code block
   jsonString = jsonString.slice(7);
   jsonString = jsonString.substring(0, jsonString.lastIndexOf("```"));
 } else if (jsonString.startsWith("```")) {
@@ -123,7 +109,10 @@ if (jsonString.startsWith("```json")) {
   jsonString = jsonString.substring(0, jsonString.lastIndexOf("```"));
 }
 
-// Garante que começa com { e termina com }
-jsonString = jsonString.substring(jsonString.indexOf("{"), jsonString.lastIndexOf("}") + 1);
+// Garante que é um JSON válido
+const jsonStart = jsonString.indexOf("{");
+const jsonEnd = jsonString.lastIndexOf("}") + 1;
+jsonString = jsonString.slice(jsonStart, jsonEnd);
 
 return JSON.parse(jsonString);
+}
