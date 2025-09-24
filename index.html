@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estuda.AI</title>
+    <meta
+      name="description"
+      content="Cronograma inteligente para ENEM e vestibulares, adaptado à sua rotina com ajuda de IA. Estude com foco e estratégia."
+    />
+    <meta
+      name="keywords"
+      content="ENEM, vestibular, cronograma, estudo, IA, educação, planejamento"
+    />
+    <link rel="icon" href="imagens/favicon.ico" type="image/x-icon" />
+    <style>
+      :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fa;
+        --text-primary: #000000;
+        --border-color: #dee2e6;
+        --btn-primary: #000000;
+        --btn-text: #ffffff;
+        --accent: #000000;
+        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      [data-theme="dark"] {
+        --bg-primary: #121212;
+        --bg-secondary: #1e1e1e;
+        --text-primary: #f8f9fa;
+        --border-color: #444;
+        --btn-primary: #ffffff;
+        --btn-text: #000000;
+        --accent: #ffffff;
+        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.7;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Cabeçalho */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 20px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      nav {
+        display: flex;
+        gap: 10px;
+      }
+
+      .logo img {
+        height: 60px;
+        border-radius: 50%;
+        border: 2px solid var(--accent);
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+      }
+
+      .logo img:hover {
+        opacity: 0.9;
+      }
+
+      .header-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        background: transparent;
+        color: var(--text-primary);
+        min-width: 110px;
+        text-align: center;
+      }
+
+      .btn-primary {
+        background: var(--btn-primary);
+        color: var(--btn-text);
+        border: none;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+        box-shadow: var(--card-shadow);
+      }
+
+      /* Seção Hero */
+      .hero {
+        text-align: center;
+        padding: 100px 0 80px;
+      }
+
+      .hero h2 {
+        font-size: 2.8rem;
+        margin-bottom: 20px;
+      }
+
+      .hero p {
+        font-size: 1.3rem;
+        max-width: 800px;
+        margin: 0 auto 40px;
+        opacity: 0.9;
+      }
+
+      .btn-hero {
+        display: inline-block;
+        background-color: var(--btn-primary);
+        color: var(--btn-text);
+        padding: 16px 32px;
+        font-size: 1.2rem;
+        border-radius: 30px;
+        text-decoration: none;
+        transition: 0.3s;
+        font-weight: 500;
+      }
+
+      .btn-hero:hover {
+        transform: translateY(-3px);
+        opacity: 0.95;
+      }
+      .btn-highlight {
+        background: var(--btn-primary) !important;
+        color: var(--btn-text) !important;
+        border: none !important;
+      }
+
+      [data-theme="dark"] .btn-highlight {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      /* Como Funciona */
+      .how-it-works {
+        padding: 80px 0;
+        text-align: center;
+      }
+
+      .how-it-works h3 {
+        font-size: 2rem;
+        margin-bottom: 50px;
+      }
+
+      .steps {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: left;
+      }
+
+      .step {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+      }
+
+      .step:last-child {
+        margin-bottom: 0;
+      }
+
+      .step strong {
+        font-size: 1.1rem;
+      }
+
+      /* Recursos */
+      .features {
+        padding: 80px 0;
+        text-align: center;
+      }
+
+      .features h3 {
+        font-size: 2rem;
+        margin-bottom: 50px;
+      }
+
+      .feature-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 25px;
+      }
+
+      .feature {
+        background: var(--bg-secondary);
+        padding: 25px;
+        border-radius: 12px;
+        width: 45%;
+        max-width: 500px;
+        border: 1px solid var(--border-color);
+      }
+
+      /* Extras */
+      .extras {
+        padding: 60px 0;
+        background: var(--bg-secondary);
+        text-align: center;
+      }
+
+      .extras h3 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+      }
+
+      .extras p {
+        max-width: 800px;
+        margin: 0 auto;
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      /* Depoimentos */
+      .testimonials {
+        padding: 80px 0;
+        text-align: center;
+      }
+
+      .testimonials h3 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+      }
+
+      .testimonial {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 30px;
+        background: var(--bg-secondary);
+        border-left: 3px solid var(--btn-primary);
+        border-radius: 8px;
+        text-align: left;
+        font-style: italic;
+        position: relative;
+      }
+
+      .testimonial::before {
+        content: '"';
+        font-size: 100px;
+        color: var(--btn-primary);
+        opacity: 0.1;
+        position: absolute;
+        top: 10px;
+        left: 15px;
+      }
+
+      .student {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .student img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        margin-right: 15px;
+        border: 1px solid var(--border-color);
+      }
+
+      .name {
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      /* Rodapé */
+      footer {
+        text-align: center;
+        padding: 40px 0;
+        border-top: 1px solid var(--border-color);
+        margin-top: 50px;
+        opacity: 0.8;
+        font-size: 0.95rem;
+      }
+
+      /* Responsividade */
+      @media (max-width: 768px) {
+        header {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 15px;
+          padding: 20px;
+        }
+
+        nav {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .header-buttons {
+          width: 100%;
+          justify-content: flex-end;
+          margin-top: 10px;
+        }
+
+        .hero h2 {
+          font-size: 2.2rem;
+        }
+
+        .hero p {
+          font-size: 1.1rem;
+        }
+
+        .step,
+        .feature {
+          width: 100%;
+        }
+      }
+
+      /* Estilo do modal de mensagem */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .modal-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        max-width: 500px;
+        padding: 25px;
+        text-align: center;
+        position: relative;
+        transform: translateY(-20px);
+        transition: transform 0.3s ease;
+      }
+
+      .modal-overlay.show .modal {
+        transform: translateY(0);
+      }
+
+      .modal h3 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        color: var(--text-primary);
+      }
+
+      .modal p {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin-bottom: 20px;
+      }
+
+      .modal-btn {
+        background: var(--btn-primary);
+        color: var(--btn-text);
+        border: none;
+        padding: 10px 25px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: opacity 0.2s;
+      }
+
+      .modal-btn:hover {
+        opacity: 0.9;
+      }
+
+      /* Acessibilidade: ocultar visualmente mas manter para leitores de tela */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Cabeçalho -->
+    <header role="banner">
+      <div class="logo" id="logo" aria-label="Ir para página inicial">
+        <img src="imagens/Logo Preta.png" alt="Estuda.AI" />
+      </div>
+      <nav class="header-buttons" aria-label="Navegação principal">
+        <button class="btn" id="loginBtnHeader">Login</button>
+        <button class="btn" id="registerBtnHeader">Criar Conta</button>
+        <button
+          class="btn btn-primary"
+          id="themeToggle"
+          aria-label="Alternar tema escuro"
+        >
+          Tema Escuro
+        </button>
+      </nav>
+    </header>
+
+    <!-- Seção Hero -->
+    <section class="hero">
+      <div class="container">
+        <h2>Estuda.AI</h2>
+        <h2>Estude com foco, com a ajuda da IA.</h2>
+        <p>
+          Cronograma inteligente para ENEM e vestibulares, adaptado à sua rotina
+          e matéria prioritária.
+        </p>
+        <a href="cronograma.html" class="btn-hero" id="startScheduleBtn"
+          >Monte seu cronograma agora</a
+        >
+      </div>
+    </section>
+
+    <!-- Como Funciona -->
+    <section class="how-it-works">
+      <div class="container">
+        <h3>Como Funciona</h3>
+        <div class="steps">
+          <div class="step">
+            <strong>Insira seus horários disponíveis</strong>, informe a matéria
+            que quer priorizar e receba um plano de estudo feito sob medida.
+          </div>
+          <div class="step">
+            <strong>A IA monta seu cronograma ideal</strong>: blocos de estudo,
+            revisões rápidas e equilíbrio entre matérias.
+          </div>
+          <div class="step">
+            <strong>Planejamento flexível que se adapta ao seu ritmo</strong> —
+            você estuda com estratégia, não com exaustão.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recursos -->
+    <section class="features">
+      <div class="container">
+        <h3>O que você ganha</h3>
+        <div class="feature-grid">
+          <div class="feature">
+            <strong>Alinhado ao seu ritmo</strong> – respeita seus horários,
+            pausas e tempo de descanso.
+          </div>
+          <div class="feature">
+            <strong>Foco na matéria que você escolher</strong> – sua prioridade
+            recebe atenção especial no cronograma.
+          </div>
+          <div class="feature">
+            <strong>Prompts prontos para cada bloco</strong> – estudo guiado com
+            inteligência (ex.: para usar em apps de memorização).
+          </div>
+          <div class="feature">
+            <strong>Revisões diárias e semanais automáticas</strong> – fixação
+            contínua sem esforço extra.
+          </div>
+          <div class="feature">
+            <strong>Para ENEM e outros vestibulares</strong> – ajustado ao exame
+            que você vai prestar.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Extras -->
+    <section class="extras">
+      <div class="container">
+        <h3>Funciona para todos os objetivos</h3>
+        <p>
+          Funciona para ENEM, vestibulares tradicionais e provas específicas.
+          Com sugestões de revisões, exercícios e acompanhamento personalizado
+          semana a semana.
+        </p>
+      </div>
+    </section>
+
+    <!-- Chamada Final -->
+    <section class="hero">
+      <div class="container">
+        <h3>Um novo jeito de aprender. Um novo tempo pra estudar.</h3>
+        <p>Saiba o que estudar hoje e nos próximos meses — sem perder tempo.</p>
+        <a href="#" class="btn-hero" id="viewPlansBtn"
+          >Comece a estudar com estratégia</a
+        >
+      </div>
+    </section>
+
+    <!-- Modal de Mensagem -->
+    <div
+      class="modal-overlay"
+      id="msgModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitle"
+    >
+      <div class="modal">
+        <h3 id="modalTitle">Título</h3>
+        <p id="modalMessage">Mensagem</p>
+        <button class="modal-btn" id="modalBtn">OK</button>
+      </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer role="contentinfo">
+      <div class="container">
+        <p>&copy; 2025 Estuda.AI – Todos os direitos reservados</p>
+        <p>Revolucione sua forma de estudar com a inteligência artificial.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Espera o DOM carregar completamente
+      document.addEventListener("DOMContentLoaded", () => {
+        // ====== 1. Elementos do DOM ======
+        const themeToggle = document.getElementById("themeToggle");
+        const body = document.body;
+        const logo = document.querySelector(".logo img");
+        const loginBtnHeader = document.getElementById("loginBtnHeader");
+        const registerBtnHeader = document.getElementById("registerBtnHeader");
+        const startScheduleBtn = document.getElementById("startScheduleBtn");
+
+        // Verifica se todos os elementos existem
+        if (
+          !themeToggle ||
+          !body ||
+          !logo ||
+          !loginBtnHeader ||
+          !registerBtnHeader ||
+          !startScheduleBtn
+        ) {
+          console.error("Erro: Alguns elementos não foram encontrados no DOM.");
+          return;
+        }
+
+        // ====== 2. Estado do tema ======
+        let isDark = localStorage.getItem("theme") === "dark";
+
+        function setTheme(dark) {
+          if (dark) {
+            body.setAttribute("data-theme", "dark");
+            themeToggle.textContent = "Tema Claro";
+            themeToggle.setAttribute("aria-label", "Alternar tema claro");
+            logo.src = "imagens/Logo Branca.png";
+          } else {
+            body.removeAttribute("data-theme");
+            themeToggle.textContent = "Tema Escuro";
+            themeToggle.setAttribute("aria-label", "Alternar tema escuro");
+            logo.src = "imagens/Logo Preta.png";
+          }
+          localStorage.setItem("theme", dark ? "dark" : "light");
+        }
+
+        // Aplica o tema salvo
+        setTheme(isDark);
+
+        // Alterna o tema ao clicar
+        themeToggle.addEventListener("click", () => {
+          isDark = !isDark;
+          setTheme(isDark);
+        });
+
+        // ✅ Declaração CORRETA do currentUser
+        const currentUser = localStorage.getItem("currentUser");
+
+        // ====== 6. Botões principais com proteção de login ======
+
+        // Função do modal (já existe)
+        function mostrarMensagem(
+          titulo,
+          mensagem,
+          onConfirm = null,
+          showCancel = false
+        ) {
+          const modal = document.getElementById("msgModal");
+          const modalTitle = document.getElementById("modalTitle");
+          const modalMessage = document.getElementById("modalMessage");
+          const modalBtn = document.getElementById("modalBtn");
+
+          if (!modal || !modalTitle || !modalMessage || !modalBtn) {
+            console.error("❌ Elementos do modal não encontrados.");
+            return;
+          }
+
+          // Limpa botões extras
+          const botoesExtras = modal.querySelectorAll(".modal-extra-btn");
+          botoesExtras.forEach((btn) => btn.remove());
+
+          // Define conteúdo
+          modalTitle.textContent = titulo;
+          modalMessage.textContent = mensagem;
+
+          // Configura botão primário
+          modalBtn.textContent = showCancel ? "Sair" : "OK";
+          modalBtn.onclick = null;
+
+          // Fecha ao clicar fora (sem executar ação)
+          modal.onclick = (e) => {
+            if (e.target === modal && !showCancel) {
+              modal.classList.remove("show");
+              if (onConfirm) onConfirm();
+            }
+          };
+
+          // Ação do botão
+          modalBtn.onclick = () => {
+            modal.classList.remove("show");
+            if (onConfirm) onConfirm();
+          };
+
+          if (showCancel) {
+            const btnCancel = document.createElement("button");
+            btnCancel.textContent = "Cancelar";
+            btnCancel.className = "modal-btn modal-extra-btn";
+            btnCancel.style.background = "transparent";
+            btnCancel.style.color = "var(--text-primary)";
+            btnCancel.style.border = "1px solid var(--border-color)";
+            btnCancel.style.marginLeft = "10px";
+
+            modalBtn.parentNode.appendChild(btnCancel);
+
+            btnCancel.onclick = (e) => {
+              e.stopPropagation();
+              modal.classList.remove("show");
+            };
+          }
+
+          // Mostra o modal
+          modal.classList.add("show");
+        }
+
+        // ====== 7. Atualiza os botões com base no login ======
+        if (currentUser) {
+          loginBtnHeader.textContent = `Olá, ${currentUser}`;
+          loginBtnHeader.classList.add("btn-highlight");
+          loginBtnHeader.onclick = () => {
+            window.location.href = "perfil.html";
+          };
+
+          registerBtnHeader.textContent = "Sair";
+          registerBtnHeader.classList.add("btn-highlight");
+          registerBtnHeader.onclick = () => {
+            mostrarMensagem(
+              "Sair da conta?",
+              `Deseja mesmo sair da conta de ${currentUser}?`,
+              () => {
+                localStorage.removeItem("currentUser");
+                window.location.reload();
+              },
+              true
+            );
+          };
+        } else {
+          loginBtnHeader.textContent = "Login";
+          loginBtnHeader.classList.remove("btn-highlight");
+          loginBtnHeader.onclick = () => {
+            window.location.href = "login.html";
+          };
+
+          registerBtnHeader.textContent = "Criar Conta";
+          registerBtnHeader.classList.remove("btn-highlight");
+          registerBtnHeader.onclick = () => {
+            window.location.href = "register.html";
+          };
+        }
+
+        // ====== 8. Botão "Monte seu cronograma" com proteção ======
+        startScheduleBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          if (startScheduleBtn.disabled) return;
+          startScheduleBtn.disabled = true;
+          startScheduleBtn.style.opacity = "0.7";
+
+          setTimeout(() => {
+            startScheduleBtn.disabled = false;
+            startScheduleBtn.style.opacity = "1";
+          }, 1000);
+
+          if (!currentUser) {
+            mostrarMensagem(
+              "Precisa estar logado",
+              "Para montar seu cronograma, você precisa estar logado primeiro.",
+              () => {
+                window.location.href = "login.html";
+              },
+              true
+            );
+          } else {
+            window.location.href = "cronograma.html";
+          }
+        });
+
+        // ====== 9. Botão "Comece a estudar com estratégia" com proteção ======
+        document
+          .getElementById("viewPlansBtn")
+          .addEventListener("click", (e) => {
+            e.preventDefault();
+
+            if (!currentUser) {
+              mostrarMensagem(
+                "Precisa estar logado",
+                "Para ver os planos disponíveis, você precisa estar logado primeiro.",
+                () => {
+                  window.location.href = "login.html";
+                },
+                true
+              );
+            } else {
+              window.location.href = "planos.html";
+            }
+          });
+        // ====== 7. Clique na logo → volta para home ======
+        document.getElementById("logo").addEventListener("click", () => {
+          window.location.href = "index.html";
+        });
+      });
+      // Exemplo: quando o usuário escolhe o plano Pro
+      localStorage.setItem("userPlan_" + currentUser, "pro");
+      // ====== 8. Controle por plano ======
+      const userPlan =
+        localStorage.getItem("userPlan_" + currentUser) || "basico";
+
+      function bloquearSeNaoTiverPlano(planoRequerido, elemento) {
+        const planos = { basico: 0, pro: 1, premium: 2 };
+        if (planos[planoRequerido] > planos[userPlan]) {
+          elemento.style.opacity = "0.6";
+          elemento.style.pointerEvents = "none";
+          const aviso = document.createElement("p");
+          aviso.textContent =
+            "🔒 Recurso disponível apenas no plano " + planoRequerido;
+          aviso.style.color = "#dc3545";
+          aviso.style.fontSize = "0.9rem";
+          aviso.style.marginTop = "-10px";
+          elemento.parentNode.insertBefore(aviso, elemento.nextSibling);
+        }
+      }
+
+      // Bloqueia campos extras se não for Pro ou Premium
+      if (userPlan === "basico") {
+        // Remove ou bloqueia campos de prioridade acima de 1
+        document.getElementById("materiaDificil").nextElementSibling?.remove(); // remove label extra
+        const prioridadeField = document.querySelector(
+          'label[for="prioridade"]'
+        ).parentElement;
+        bloquearSeNaoTiverPlano("pro", prioridadeField);
+
+        // Desabilita múltiplas matérias prioritárias
+        const diasSemana = document.querySelectorAll(".day-schedule");
+        diasSemana.forEach((dia) => {
+          const btnAdd = dia.querySelector(".btn-add-time");
+          bloquearSeNaoTiverPlano("pro", btnAdd);
+        });
+      }
+
+      // Simulados personalizados (só Premium)
+      document.getElementById("disponibilidade").insertAdjacentHTML(
+        "afterend",
+        `
+  <div id="simuladosSection" style="margin: 20px 0;">
+    <label>Gerar Simulado Personalizado</label>
+    <button id="gerarSimulado" class="btn">Gerar Simulado</button>
+  </div>
+`
+      );
+      bloquearSeNaoTiverPlano(
+        "premium",
+        document.getElementById("simuladosSection")
+      );
+
+      // IA ajusta cronograma (só Pro e Premium)
+      if (userPlan === "basico") {
+        const msgIA = document.createElement("p");
+        msgIA.textContent =
+          "💡 Dica: No plano Pro, a IA ajusta seu cronograma com base no seu desempenho.";
+        msgIA.style.color = "#007bff";
+        msgIA.style.fontSize = "0.95rem";
+        document.querySelector(".form-section").appendChild(msgIA);
+      }
+    </script>
+  </body>
+</html>
