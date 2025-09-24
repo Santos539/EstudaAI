@@ -640,13 +640,7 @@
       localStorage.setItem("userFormData_" + currentUser, JSON.stringify(dadosUsuario));
 
       try {
-        // ✅ CHAMA A FUNÇÃO SERVERLESS NA VERCEL
-        const response = await fetch("/api/gerar-cronograma", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(dadosUsuario)
-        });
-
+        
         const cronogramaGerado = await response.json();
 
         if (response.ok && cronogramaGerado.cronograma) {
