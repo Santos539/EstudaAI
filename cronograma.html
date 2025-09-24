@@ -1,795 +1,748 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cronograma Personalizado - Estuda.AI</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cronograma Personalizado - Estuda.AI</title>
 
-    <style>
-      :root {
-        --bg-primary: #ffffff;
-        --bg-secondary: #f8f9fa;
-        --text-primary: #212529;
-        --border-color: #dee2e6;
-        --btn-primary: #000000;
-        --btn-text: #ffffff;
-        --accent: #000000;
-        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      }
+  <style>
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --text-primary: #212529;
+      --border-color: #dee2e6;
+      --btn-primary: #000000;
+      --btn-text: #ffffff;
+      --accent: #000000;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-      [data-theme="dark"] {
-        --bg-primary: #121212;
-        --bg-secondary: #1e1e1e;
-        --text-primary: #f8f9fa;
-        --border-color: #444;
-        --btn-primary: #ffffff;
-        --btn-text: #000000;
-        --accent: #ffffff;
-        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      }
+    [data-theme="dark"] {
+      --bg-primary: #121212;
+      --bg-secondary: #1e1e1e;
+      --text-primary: #f8f9fa;
+      --border-color: #444;
+      --btn-primary: #ffffff;
+      --btn-text: #000000;
+      --accent: #ffffff;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      body {
-        font-family: "Segoe UI", sans-serif;
-        background-color: var(--bg-primary);
-        color: var(--text-primary);
-        line-height: 1.7;
-        transition: all 0.3s ease;
-        padding-bottom: 80px;
-      }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      transition: all 0.3s ease;
+      padding-bottom: 80px;
+    }
 
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-      }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
 
-      /* Cabeçalho */
-      header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 20px;
-        border-bottom: 1px solid var(--border-color);
-        position: relative;
-      }
+    /* Cabeçalho */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 20px;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+    }
 
-      .logo {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-      }
+    .logo {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
 
-      .logo img {
-        height: 60px;
-        border-radius: 50%;
-        border: 2px solid var(--accent);
-        background: var(--bg-secondary);
-        padding: 4px;
-      }
+    .logo img {
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--bg-secondary);
+      padding: 4px;
+    }
 
-      .header-buttons {
-        display: flex;
-        gap: 10px;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-      }
+    .header-buttons {
+      display: flex;
+      gap: 10px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
 
-      .btn {
-        padding: 10px 18px;
-        border-radius: 6px;
-        border: 1px solid var(--border-color);
-        cursor: pointer;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-      }
+    .btn {
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
 
-      .btn-primary {
-        background: var(--btn-primary);
-        color: var(--btn-text);
-      }
+    .btn-primary {
+      background: var(--btn-primary);
+      color: var(--btn-text);
+    }
 
-      .btn-secondary {
-        background: transparent;
-        color: var(--text-primary);
-      }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+    }
 
-      .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--card-shadow);
-      }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow);
+    }
 
-      /* Formulário */
-      .form-section {
-        max-width: 800px;
-        margin: 40px auto;
-        padding: 30px;
-        background: var(--bg-secondary);
-        border-radius: 12px;
-        border: 1px solid var(--border-color);
-        box-shadow: var(--card-shadow);
-      }
+    /* Formulário */
+    .form-section {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 30px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+    }
 
-      .form-group {
-        margin-bottom: 20px;
-      }
+    .form-group {
+      margin-bottom: 20px;
+    }
 
-      label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-      }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
 
-      input,
-      select {
-        width: 100%;
-        padding: 10px;
-        border-radius: 6px;
-        border: 1px solid var(--border-color);
-        background: var(--bg-primary);
-        color: var(--text-primary);
-        font-size: 1rem;
-      }
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
 
-      .day-schedule {
-        margin-bottom: 15px;
-        padding: 12px;
-        background: var(--bg-primary);
-        border-radius: 8px;
-        border: 1px solid var(--border-color);
-      }
+    .day-schedule {
+      margin-bottom: 15px;
+      padding: 12px;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
 
-      .day-schedule label {
-        margin-bottom: 4px;
-      }
+    .day-schedule label {
+      margin-bottom: 4px;
+    }
 
-      .time-blocks {
-        margin-top: 8px;
-      }
+    .time-blocks {
+      margin-top: 8px;
+    }
 
-      .time-group {
-        display: flex;
-        gap: 10px;
-        margin-top: 5px;
-        align-items: center;
-      }
+    .time-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+      align-items: center;
+    }
 
-      .time-group input {
-        width: 48%;
-      }
+    .time-group input {
+      width: 48%;
+    }
 
-      button[type="submit"] {
-        background: var(--btn-primary);
-        color: var(--btn-text);
-        padding: 14px 24px;
-        font-size: 1.1rem;
-        width: 100%;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-      }
+    button[type="submit"] {
+      background: var(--btn-primary);
+      color: var(--btn-text);
+      padding: 14px 24px;
+      font-size: 1.1rem;
+      width: 100%;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
 
-      button[type="submit"]:hover {
-        opacity: 0.9;
-      }
+    button[type="submit"]:hover {
+      opacity: 0.9;
+    }
 
-      /* Mensagem de confirmação */
-      #confirmationMessage {
-        display: none;
-        text-align: center;
-        margin: 30px auto;
-        max-width: 800px;
-        padding: 20px;
-        background: var(--bg-secondary);
-        border-radius: 12px;
-        border: 1px solid var(--border-color);
-        font-weight: 500;
-      }
+    /* Mensagem de confirmação */
+    #confirmationMessage {
+      display: none;
+      text-align: center;
+      margin: 30px auto;
+      max-width: 800px;
+      padding: 20px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-weight: 500;
+    }
 
-      /* Botão de adicionar horário */
-      .btn-add-time {
-        background: var(--btn-primary);
-        color: var(--btn-text);
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        padding: 6px 12px;
-        font-size: 0.9rem;
-        cursor: pointer;
-        margin-top: 10px;
-        transition: all 0.3s ease;
-      }
+    /* Botão de adicionar horário */
+    .btn-add-time {
+      background: var(--btn-primary);
+      color: var(--btn-text);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+    }
 
-      .btn-add-time:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-      }
+    .btn-add-time:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
 
-      /* Botão de remover horário (✕) */
-      .btn-remove-time {
-        background: #dc3545;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        padding: 5px 8px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        margin-left: 5px;
-      }
+    /* Botão de remover horário (✕) */
+    .btn-remove-time {
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-left: 5px;
+    }
 
-      .btn-remove-time:hover {
-        background: #c82333;
-      }
+    .btn-remove-time:hover {
+      background: #c82333;
+    }
 
-      /* Recurso bloqueado */
-      .bloqueado {
-        opacity: 0.6;
-        pointer-events: none;
-        position: relative;
-      }
+    /* Recurso bloqueado */
+    .bloqueado {
+      opacity: 0.6;
+      pointer-events: none;
+      position: relative;
+    }
 
-      .bloqueado::after {
-        content: "🔒";
-        position: absolute;
-        top: 5px;
-        right: 10px;
-        font-size: 1.2rem;
-        color: #dc3545;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Cabeçalho -->
-    <header>
-      <div class="logo" id="logo">
-        <img src="imagens/Logo Preta.png" alt="Estuda.AI" />
+    .bloqueado::after {
+      content: "🔒";
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      font-size: 1.2rem;
+      color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header>
+    <div class="logo" id="logo">
+      <img src="imagens/Logo Preta.png" alt="Estuda.AI" />
+    </div>
+    <div class="header-buttons">
+      <button class="btn btn-primary" id="themeToggle">Tema Escuro</button>
+      <button class="btn btn-secondary" id="authBtn">Carregando...</button>
+    </div>
+  </header>
+
+  <!-- Formulário -->
+  <section class="form-section">
+    <h2>Monte seu Cronograma com IA</h2>
+    <form id="scheduleForm">
+      <div class="form-group">
+        <label for="concurso">Concurso/Vestibular</label>
+        <select id="concurso" required>
+          <option value="enem">ENEM</option>
+          <option value="fuvest">FUVEST</option>
+          <option value="uerj">UERJ</option>
+        </select>
       </div>
-      <div class="header-buttons">
-        <button class="btn btn-primary" id="themeToggle">Tema Escuro</button>
-        <button class="btn btn-secondary" id="authBtn">Carregando...</button>
+
+      <div class="form-group">
+        <label for="materiaDificil">Matéria de Maior Dificuldade</label>
+        <select id="materiaDificil" required>
+          <option value="matematica">Matemática</option>
+          <option value="portugues">Português</option>
+          <option value="fisica">Física</option>
+          <option value="quimica">Química</option>
+          <option value="biologia">Biologia</option>
+          <option value="historia">História</option>
+          <option value="geografia">Geografia</option>
+          <option value="filosofia">Filosofia/Sociologia</option>
+        </select>
       </div>
-    </header>
 
-    <!-- Formulário -->
-    <section class="form-section">
-      <h2>Monte seu Cronograma com IA</h2>
-      <form id="scheduleForm">
-        <div class="form-group">
-          <label for="concurso">Concurso/Vestibular</label>
-          <select id="concurso" required>
-            <option value="enem">ENEM</option>
-            <option value="fuvest">FUVEST</option>
-            <option value="uerj">UERJ</option>
-          </select>
+      <div class="form-group">
+        <label for="prioridade">Prioridade para essa matéria (%)</label>
+        <input type="number" id="prioridade" min="20" max="70" value="40" required />
+      </div>
+
+      <!-- Matéria Prioritária 2 (só Pro e Premium) -->
+      <div id="segundaMateriaSection" class="form-group bloqueado" style="display: none">
+        <label for="materiaDificil2">Segunda Matéria Prioritária</label>
+        <select id="materiaDificil2">
+          <option value="matematica">Matemática</option>
+          <option value="portugues">Português</option>
+          <option value="fisica">Física</option>
+          <option value="quimica">Química</option>
+          <option value="biologia">Biologia</option>
+          <option value="historia">História</option>
+          <option value="geografia">Geografia</option>
+          <option value="filosofia">Filosofia/Sociologia</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Disponibilidade por dia da semana</label>
+        <p style="font-size: 0.9rem; margin-bottom: 10px">
+          Marque os dias e informe todos os horários disponíveis.
+        </p>
+
+        <div id="diasSemana">
+          <!-- Dias dinâmicos serão gerados aqui -->
         </div>
+      </div>
 
-        <div class="form-group">
-          <label for="materiaDificil">Matéria de Maior Dificuldade</label>
-          <select id="materiaDificil" required>
-            <option value="matematica">Matemática</option>
-            <option value="portugues">Português</option>
-            <option value="fisica">Física</option>
-            <option value="quimica">Química</option>
-            <option value="biologia">Biologia</option>
-            <option value="historia">História</option>
-            <option value="geografia">Geografia</option>
-            <option value="filosofia">Filosofia/Sociologia</option>
-          </select>
-        </div>
+      <button type="submit">Salvar Meus Dados</button>
+    </form>
+  </section>
 
-        <div class="form-group">
-          <label for="prioridade">Prioridade para essa matéria (%)</label>
-          <input
-            type="number"
-            id="prioridade"
-            min="20"
-            max="70"
-            value="40"
-            required
-          />
-        </div>
+  <!-- Mensagem de Confirmação -->
+  <div id="confirmationMessage">
+    ✅ Seus dados foram salvos com sucesso! Eles serão usados para personalizar seu cronograma.
+  </div>
 
-        <!-- Matéria Prioritária 2 (só Pro e Premium) -->
-        <div
-          id="segundaMateriaSection"
-          class="form-group bloqueado"
-          style="display: none"
-        >
-          <label for="materiaDificil2">Segunda Matéria Prioritária</label>
-          <select id="materiaDificil2">
-            <option value="matematica">Matemática</option>
-            <option value="portugues">Português</option>
-            <option value="fisica">Física</option>
-            <option value="quimica">Química</option>
-            <option value="biologia">Biologia</option>
-            <option value="historia">História</option>
-            <option value="geografia">Geografia</option>
-            <option value="filosofia">Filosofia/Sociologia</option>
-          </select>
-        </div>
+  <script>
+    // ====== 1. Verificação de Login ======
+    const currentUser = localStorage.getItem("currentUser");
+    if (!currentUser) {
+      alert("Você precisa estar logado.");
+      window.location.href = "login.html";
+    }
 
-        <div class="form-group">
-          <label>Disponibilidade por dia da semana</label>
-          <p style="font-size: 0.9rem; margin-bottom: 10px">
-            Marque os dias e informe todos os horários disponíveis.
-          </p>
+    // ====== Função: Mostrar Modal Personalizado ======
+    function mostrarMensagem(titulo, mensagem, onConfirm = null, showCancel = false) {
+      const modal = document.createElement("div");
+      modal.style.cssText = `
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        font-family: 'Segoe UI', sans-serif;
+      `;
 
-          <div id="diasSemana">
-            <!-- Dias dinâmicos serão gerados aqui -->
+      modal.innerHTML = `
+        <div style="
+          background: var(--bg-primary);
+          padding: 30px;
+          border-radius: 12px;
+          max-width: 500px;
+          width: 90%;
+          text-align: center;
+          border: 1px solid var(--border-color);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        ">
+          <h3 style="color: var(--text-primary); margin-bottom: 15px;">${titulo}</h3>
+          <p style="opacity: 0.9; margin-bottom: 25px;">${mensagem}</p>
+          <div>
+            <button id="modalConfirm" style="
+              background: #dc3545;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 6px;
+              cursor: pointer;
+              margin-right: 10px;
+            ">Sair</button>
+            <button id="modalCancel" style="
+              background: #6c757d;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 6px;
+              cursor: pointer;
+            ">Cancelar</button>
           </div>
         </div>
+      `;
 
-        <button type="submit">Salvar Meus Dados</button>
-      </form>
-    </section>
+      document.body.appendChild(modal);
 
-    <!-- Mensagem de Confirmação -->
-    <div id="confirmationMessage">
-      ✅ Seus dados foram salvos com sucesso! Eles serão usados para
-      personalizar seu cronograma.
-    </div>
-
-    <script>
-      // ====== 1. Verificação de Login ======
-      const currentUser = localStorage.getItem("currentUser");
-      if (!currentUser) {
-        alert("Você precisa estar logado.");
-        window.location.href = "login.html";
-      }
-
-      // ====== Função: Mostrar Modal Personalizado ======
-      function mostrarMensagem(
-        titulo,
-        mensagem,
-        onConfirm = null,
-        showCancel = false
-      ) {
-        const modal = document.createElement("div");
-        modal.style.cssText = `
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      font-family: 'Segoe UI', sans-serif;
-    `;
-
-        modal.innerHTML = `
-      <div style="
-        background: var(--bg-primary);
-        padding: 30px;
-        border-radius: 12px;
-        max-width: 500px;
-        width: 90%;
-        text-align: center;
-        border: 1px solid var(--border-color);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      ">
-        <h3 style="color: var(--text-primary); margin-bottom: 15px;">${titulo}</h3>
-        <p style="opacity: 0.9; margin-bottom: 25px;">${mensagem}</p>
-        <div>
-          <button id="modalConfirm" style="
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-right: 10px;
-          ">Sair</button>
-          <button id="modalCancel" style="
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-          ">Cancelar</button>
-        </div>
-      </div>
-    `;
-
-        document.body.appendChild(modal);
-
-        document.getElementById("modalConfirm").onclick = () => {
-          document.body.removeChild(modal);
-          if (onConfirm) onConfirm();
-        };
-
-        document.getElementById("modalCancel").onclick = () => {
-          document.body.removeChild(modal);
-        };
-
-        modal.onclick = (e) => {
-          if (e.target === modal) {
-            document.body.removeChild(modal);
-          }
-        };
-      }
-
-      // ====== Atualiza botão de usuário com modal ======
-      document.getElementById("authBtn").textContent = `Olá, ${currentUser}`;
-      document.getElementById("authBtn").onclick = () => {
-        mostrarMensagem(
-          "Sair da conta?",
-          `Deseja realmente sair da conta de ${currentUser}?`,
-          () => {
-            localStorage.removeItem("currentUser");
-            window.location.href = "index.html";
-          },
-          true
-        );
+      document.getElementById("modalConfirm").onclick = () => {
+        document.body.removeChild(modal);
+        if (onConfirm) onConfirm();
       };
 
-      // ====== 2. Tema Escuro ======
-      const themeToggle = document.getElementById("themeToggle");
-      const body = document.body;
-      const logo = document.getElementById("logo").querySelector("img");
-      let isDark = localStorage.getItem("theme") === "dark";
+      document.getElementById("modalCancel").onclick = () => {
+        document.body.removeChild(modal);
+      };
 
-      function setTheme(dark) {
-        if (dark) {
-          body.setAttribute("data-theme", "dark");
-          themeToggle.textContent = "Tema Claro";
-          logo.src = "imagens/Logo Branca.png";
-        } else {
-          body.removeAttribute("data-theme");
-          themeToggle.textContent = "Tema Escuro";
-          logo.src = "imagens/Logo Preta.png";
+      modal.onclick = (e) => {
+        if (e.target === modal) {
+          document.body.removeChild(modal);
         }
-        localStorage.setItem("theme", dark ? "dark" : "light");
+      };
+    }
+
+    // ====== Atualiza botão de usuário com modal ======
+    document.getElementById("authBtn").textContent = `Olá, ${currentUser}`;
+    document.getElementById("authBtn").onclick = () => {
+      mostrarMensagem(
+        "Sair da conta?",
+        `Deseja realmente sair da conta de ${currentUser}?`,
+        () => {
+          localStorage.removeItem("currentUser");
+          window.location.href = "index.html";
+        },
+        true
+      );
+    };
+
+    // ====== 2. Tema Escuro ======
+    const themeToggle = document.getElementById("themeToggle");
+    const body = document.body;
+    const logo = document.getElementById("logo").querySelector("img");
+    let isDark = localStorage.getItem("theme") === "dark";
+
+    function setTheme(dark) {
+      if (dark) {
+        body.setAttribute("data-theme", "dark");
+        themeToggle.textContent = "Tema Claro";
+        logo.src = "imagens/Logo Branca.png";
+      } else {
+        body.removeAttribute("data-theme");
+        themeToggle.textContent = "Tema Escuro";
+        logo.src = "imagens/Logo Preta.png";
       }
+      localStorage.setItem("theme", dark ? "dark" : "light");
+    }
 
+    setTheme(isDark);
+    themeToggle.addEventListener("click", () => {
+      isDark = !isDark;
       setTheme(isDark);
+    });
 
-      themeToggle.addEventListener("click", () => {
-        isDark = !isDark;
-        setTheme(isDark);
-      });
+    // ====== 3. Voltar para home ======
+    document.getElementById("logo").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
 
-      // ====== 3. Voltar para home ======
-      document.getElementById("logo").addEventListener("click", () => {
-        window.location.href = "index.html";
-      });
+    // ====== 4. Inicializa dias da semana ======
+    const diasDaSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+    const diasSemanaContainer = document.getElementById("diasSemana");
+    diasSemanaContainer.innerHTML = "";
 
-      // ====== 4. Inicializa dias da semana ======
-      const diasDaSemana = [
-        "Segunda",
-        "Terça",
-        "Quarta",
-        "Quinta",
-        "Sexta",
-        "Sábado",
-        "Domingo",
-      ];
+    diasDaSemana.forEach((dia) => {
+      diasSemanaContainer.innerHTML += `
+        <div class="day-schedule">
+          <label><input type="checkbox" name="dia" value="${dia}"> ${dia}-feira</label>
+          <div class="time-blocks">
+            <div class="time-group">
+              <input type="time" class="inicio" placeholder="Início">
+              <input type="time" class="fim" placeholder="Fim">
+              <button type="button" class="btn-remove-time">✕</button>
+            </div>
+          </div>
+          <button type="button" class="btn-add-time">+ Adicionar Horário</button>
+        </div>
+      `;
+    });
 
-      const diasSemanaContainer = document.getElementById("diasSemana");
-      diasSemanaContainer.innerHTML = "";
-
-      diasDaSemana.forEach((dia) => {
-        diasSemanaContainer.innerHTML += `
-      <div class="day-schedule">
-        <label><input type="checkbox" name="dia" value="${dia}"> ${dia}-feira</label>
-        <div class="time-blocks">
-          <div class="time-group">
+    // ====== 5. Função para inicializar botões de horário ======
+    function initTimeButtons() {
+      document.querySelectorAll(".btn-add-time").forEach((button) => {
+        button.onclick = null;
+        button.onclick = function () {
+          const timeBlocks = this.previousElementSibling;
+          const newGroup = document.createElement("div");
+          newGroup.className = "time-group";
+          newGroup.innerHTML = `
             <input type="time" class="inicio" placeholder="Início">
             <input type="time" class="fim" placeholder="Fim">
             <button type="button" class="btn-remove-time">✕</button>
-          </div>
-        </div>
-        <button type="button" class="btn-add-time">+ Adicionar Horário</button>
-      </div>
-    `;
+          `;
+          timeBlocks.appendChild(newGroup);
+          initRemoveButton(newGroup.querySelector(".btn-remove-time"));
+        };
       });
 
-      // ====== 5. Função para inicializar botões de horário ======
-      function initTimeButtons() {
-        document.querySelectorAll(".btn-add-time").forEach((button) => {
-          button.onclick = null;
-          button.onclick = function () {
-            const timeBlocks = this.previousElementSibling;
-            const newGroup = document.createElement("div");
-            newGroup.className = "time-group";
-            newGroup.innerHTML = `
-          <input type="time" class="inicio" placeholder="Início">
-          <input type="time" class="fim" placeholder="Fim">
-          <button type="button" class="btn-remove-time">✕</button>
-        `;
-            timeBlocks.appendChild(newGroup);
-            initRemoveButton(newGroup.querySelector(".btn-remove-time"));
-          };
-        });
+      document.querySelectorAll(".btn-remove-time").forEach((btn) => {
+        initRemoveButton(btn);
+      });
+    }
 
-        document.querySelectorAll(".btn-remove-time").forEach((btn) => {
-          initRemoveButton(btn);
-        });
-      }
+    function initRemoveButton(button) {
+      if (!button || button.dataset.initialized) return;
+      button.dataset.initialized = "true";
 
-      function initRemoveButton(button) {
-        if (!button || button.dataset.initialized) return;
-        button.dataset.initialized = "true";
+      button.addEventListener("click", function () {
+        const group = this.closest(".time-group");
+        const container = group.parentElement;
+        if (container.children.length > 1) {
+          container.removeChild(group);
+        } else {
+          alert("Mantenha pelo menos um horário neste dia.");
+        }
+      });
+    }
 
-        button.addEventListener("click", function () {
-          const group = this.closest(".time-group");
-          const container = group.parentElement;
-          if (container.children.length > 1) {
-            container.removeChild(group);
-          } else {
-            alert("Mantenha pelo menos um horário neste dia.");
-          }
-        });
-      }
-
-      // ====== 6. Modal de redirecionamento ======
-      function mostrarModalRedirecionamento() {
-        const modal = document.createElement("div");
-        modal.style.cssText = `
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      font-family: 'Segoe UI', sans-serif;
-    `;
-        modal.innerHTML = `
-      <div style="
-        background: var(--bg-primary);
-        padding: 30px;
-        border-radius: 12px;
-        max-width: 500px;
-        width: 90%;
-        text-align: center;
-        border: 1px solid var(--border-color);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      ">
-        <h3 style="color: var(--text-primary); margin-bottom: 15px;">Pronto!</h3>
-        <p style="opacity: 0.9; margin-bottom: 25px;">Seus dados foram salvos com sucesso.</p>
-        <div>
-          <button id="btnGoToProfile" style="
-            background: #0d6efd;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-right: 10px;
-          ">Ir para Perfil</button>
-          <button id="btnStay" style="
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-          ">Ficar Aqui</button>
+    // ====== 6. Modal de redirecionamento ======
+    function mostrarModalRedirecionamento() {
+      const modal = document.createElement("div");
+      modal.style.cssText = `
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        font-family: 'Segoe UI', sans-serif;
+      `;
+      modal.innerHTML = `
+        <div style="
+          background: var(--bg-primary);
+          padding: 30px;
+          border-radius: 12px;
+          max-width: 500px;
+          width: 90%;
+          text-align: center;
+          border: 1px solid var(--border-color);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        ">
+          <h3 style="color: var(--text-primary); margin-bottom: 15px;">Pronto!</h3>
+          <p style="opacity: 0.9; margin-bottom: 25px;">Seus dados foram salvos com sucesso.</p>
+          <div>
+            <button id="btnGoToProfile" style="
+              background: #0d6efd;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 6px;
+              cursor: pointer;
+              margin-right: 10px;
+            ">Ir para Perfil</button>
+            <button id="btnStay" style="
+              background: #6c757d;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 6px;
+              cursor: pointer;
+            ">Ficar Aqui</button>
+          </div>
         </div>
-      </div>
-    `;
-        document.body.appendChild(modal);
+      `;
+      document.body.appendChild(modal);
 
-        document.getElementById("btnGoToProfile").onclick = () => {
-          window.location.href = "perfil.html";
-        };
-        document.getElementById("btnStay").onclick = () => {
-          document.body.removeChild(modal);
-        };
-        modal.onclick = (e) => {
-          if (e.target === modal) document.body.removeChild(modal);
-        };
-      }
+      document.getElementById("btnGoToProfile").onclick = () => {
+        window.location.href = "perfil.html";
+      };
+      document.getElementById("btnStay").onclick = () => {
+        document.body.removeChild(modal);
+      };
+      modal.onclick = (e) => {
+        if (e.target === modal) document.body.removeChild(modal);
+      };
+    }
 
-      // ====== 7. Controle por Plano ======
-      const userPlan =
-        localStorage.getItem("userPlan_" + currentUser) || "gratuito";
+    // ====== 7. Controle por Plano ======
+    const userPlan = localStorage.getItem("userPlan_" + currentUser) || "gratuito";
+    const segundaMateriaSection = document.getElementById("segundaMateriaSection");
 
-      // Segunda matéria só em Pro e Premium
-      const segundaMateriaSection = document.getElementById(
-        "segundaMateriaSection"
-      );
-      if (userPlan === "pro" || userPlan === "premium") {
-        segundaMateriaSection.style.display = "block";
-        segundaMateriaSection.classList.remove("bloqueado");
-      } else {
-        segundaMateriaSection.style.display = "block"; // mostra aviso
-      }
+    if (userPlan === "pro" || userPlan === "premium") {
+      segundaMateriaSection.style.display = "block";
+      segundaMateriaSection.classList.remove("bloqueado");
+    } else {
+      segundaMateriaSection.style.display = "block";
+    }
 
-      // ====== 8. SUBMIT DO FORMULÁRIO ======
-      document
-        .getElementById("scheduleForm")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
+    // ====== 8. SUBMIT DO FORMULÁRIO COM IA ======
+    document.getElementById("scheduleForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-          const concurso = document.getElementById("concurso").value;
-          const materiaDificil =
-            document.getElementById("materiaDificil").value;
-          const prioridade = parseInt(
-            document.getElementById("prioridade").value
-          );
-          const materiaDificil2 =
-            document.getElementById("materiaDificil2").value || null;
+      const concurso = document.getElementById("concurso").value;
+      const materiaDificil = document.getElementById("materiaDificil").value;
+      const prioridade = parseInt(document.getElementById("prioridade").value);
+      const materiaDificil2 = document.getElementById("materiaDificil2").value || null;
 
-          const disponibilidade = [];
-          let hasError = false;
+      const disponibilidade = [];
+      let hasError = false;
 
-          document.querySelectorAll(".day-schedule").forEach((dayContainer) => {
-            const checkbox = dayContainer.querySelector('input[name="dia"]');
-            if (!checkbox.checked) return;
+      document.querySelectorAll(".day-schedule").forEach((dayContainer) => {
+        const checkbox = dayContainer.querySelector('input[name="dia"]');
+        if (!checkbox.checked) return;
 
-            const diaNome = checkbox.value;
-            const timeGroups = dayContainer.querySelectorAll(".time-group");
-            const horariosDoDia = [];
+        const diaNome = checkbox.value;
+        const timeGroups = dayContainer.querySelectorAll(".time-group");
+        const horariosDoDia = [];
 
-            timeGroups.forEach((group) => {
-              const inicioInput = group.querySelector(".inicio");
-              const fimInput = group.querySelector(".fim");
+        timeGroups.forEach((group) => {
+          const inicioInput = group.querySelector(".inicio");
+          const fimInput = group.querySelector(".fim");
 
-              if (!inicioInput || !fimInput) return;
+          if (!inicioInput || !fimInput) return;
 
-              const inicio = inicioInput.value;
-              const fim = fimInput.value;
+          const inicio = inicioInput.value;
+          const fim = fimInput.value;
 
-              if (!inicio && !fim) return;
-              if (!inicio || !fim) {
-                alert(`Preencha ambos os horários em ${diaNome}.`);
-                hasError = true;
-                return;
-              }
-              if (fim <= inicio) {
-                alert(`${diaNome}: horário final deve ser depois do inicial.`);
-                hasError = true;
-                return;
-              }
-
-              horariosDoDia.push({ inicio, fim });
-            });
-
-            if (hasError) return;
-            if (horariosDoDia.length > 0) {
-              disponibilidade.push({ dia: diaNome, horarios: horariosDoDia });
-            }
-          });
-
-          if (hasError || disponibilidade.length === 0) {
-            alert("Verifique os horários informados.");
+          if (!inicio && !fim) return;
+          if (!inicio || !fim) {
+            alert(`Preencha ambos os horários em ${diaNome}.`);
+            hasError = true;
+            return;
+          }
+          if (fim <= inicio) {
+            alert(`${diaNome}: horário final deve ser depois do inicial.`);
+            hasError = true;
             return;
           }
 
-          const dadosUsuario = {
-            concurso,
-            materiaDificil,
-            prioridade,
-            materiaDificil2,
-            disponibilidade,
-            salvoEm: new Date().toLocaleString("pt-BR"),
-          };
-
-          localStorage.setItem(
-            "userFormData_" + currentUser,
-            JSON.stringify(dadosUsuario)
-          );
-
-          // Gera cronograma com IA (fallback por enquanto)
-          const cronogramaGerado = fallbackGerarCronograma(dadosUsuario);
-          localStorage.setItem(
-            "ia_cronograma_" + currentUser,
-            JSON.stringify(cronogramaGerado)
-          );
-
-          mostrarModalRedirecionamento();
+          horariosDoDia.push({ inicio, fim });
         });
 
-      // ====== 9. Geração de Cronograma (sem IA por enquanto) ======
-      function fallbackGerarCronograma(dadosUsuario) {
-        const { disponibilidade, materiaDificil, prioridade, materiaDificil2 } =
-          dadosUsuario;
-        const materias = ["Matemática", "Português", "História", "Geografia"];
-        const tipos = ["teoria", "exercício"];
-
-        const cronograma = [];
-
-        disponibilidade.forEach((dia) => {
-          dia.horarios.forEach((horario) => {
-            const usarMateriaDificil = Math.random() * 100 < prioridade;
-            const materia = usarMateriaDificil
-              ? materiaDificil.charAt(0).toUpperCase() + materiaDificil.slice(1)
-              : materias[Math.floor(Math.random() * materias.length)];
-
-            const temaMap = {
-              matematica: "Funções",
-              portugues: "Interpretação",
-              historia: "Revolução Industrial",
-              geografia: "Urbanização",
-            };
-            const tema = temaMap[materia.toLowerCase()] || "Introdução";
-            const tipo = tipos[Math.floor(Math.random() * tipos.length)];
-
-            cronograma.push({
-              dia: dia.dia,
-              horario: `${horario.inicio} – ${horario.fim}`,
-              materia,
-              tema,
-              tipo,
-            });
-          });
-        });
-
-        return { cronograma };
-      }
-
-      // ====== 10. Carregar dados salvos ======
-      const savedData = localStorage.getItem("userFormData_" + currentUser);
-      if (savedData) {
-        try {
-          const dados = JSON.parse(savedData);
-          document.getElementById("concurso").value = dados.concurso;
-          document.getElementById("materiaDificil").value =
-            dados.materiaDificil;
-          document.getElementById("prioridade").value = dados.prioridade;
-          if (dados.materiaDificil2) {
-            document.getElementById("materiaDificil2").value =
-              dados.materiaDificil2;
-          }
-
-          dados.disponibilidade.forEach((item) => {
-            const checkbox = Array.from(
-              document.querySelectorAll('input[name="dia"]')
-            ).find((cb) => cb.value === item.dia);
-            if (checkbox) {
-              checkbox.checked = true;
-              const dayContainer = checkbox.closest(".day-schedule");
-              const timeBlocks = dayContainer.querySelector(".time-blocks");
-              timeBlocks.innerHTML = "";
-              item.horarios.forEach((horario) => {
-                const newGroup = document.createElement("div");
-                newGroup.className = "time-group";
-                newGroup.innerHTML = `
-              <input type="time" class="inicio" value="${horario.inicio}">
-              <input type="time" class="fim" value="${horario.fim}">
-              <button type="button" class="btn-remove-time">✕</button>
-            `;
-                timeBlocks.appendChild(newGroup);
-              });
-            }
-          });
-          setTimeout(initTimeButtons, 100);
-        } catch (e) {
-          console.error("Erro ao carregar dados:", e);
+        if (hasError) return;
+        if (horariosDoDia.length > 0) {
+          disponibilidade.push({ dia: diaNome, horarios: horariosDoDia });
         }
+      });
+
+      if (hasError || disponibilidade.length === 0) {
+        alert("Verifique os horários informados.");
+        return;
       }
 
-      // ====== 11. Inicializa ======
-      document.addEventListener("DOMContentLoaded", () => {
-        initTimeButtons();
-      });
-    </script>
+      const dadosUsuario = {
+        concurso,
+        materiaDificil,
+        prioridade,
+        materiaDificil2,
+        disponibilidade,
+        salvoEm: new Date().toLocaleString("pt-BR"),
+      };
 
-    <!-- Botão Fixo "Ver Perfil" -->
-    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000">
-      <button
-        class="btn btn-primary"
-        style="
-          padding: 14px 20px;
-          font-size: 1rem;
-          border-radius: 30px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          transition: all 0.3s ease;
-          min-width: 150px;
-        "
-        onclick="window.location.href='perfil.html'"
-      >
-        Ver Perfil
-      </button>
-    </div>
-  </body>
+      localStorage.setItem("userFormData_" + currentUser, JSON.stringify(dadosUsuario));
+
+      try {
+        // ✅ CHAMA A FUNÇÃO SERVERLESS NA VERCEL
+        const response = await fetch("/api/gerar-cronograma", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dadosUsuario)
+        });
+
+        const cronogramaGerado = await response.json();
+
+        if (response.ok && cronogramaGerado.cronograma) {
+          localStorage.setItem('ia_cronograma_' + currentUser, JSON.stringify(cronogramaGerado));
+          mostrarModalRedirecionamento();
+        } else {
+          throw new Error("IA não retornou cronograma válido");
+        }
+      } catch (error) {
+        console.error("Erro ao chamar IA:", error);
+        alert("Erro com IA. Usando versão simulada.");
+        
+        // Fallback apenas se IA falhar
+        const fallback = {
+          cronograma: [
+            {
+              dia: "Segunda",
+              horario: "18:00 – 19:00",
+              materia: "Matemática",
+              tema: "Equações do 2º grau",
+              tipo: "teoria"
+            },
+            {
+              dia: "Terça",
+              horario: "19:00 – 20:00",
+              materia: "História",
+              tema: "Era Vargas",
+              tipo: "exercício"
+            }
+          ]
+        };
+        localStorage.setItem('ia_cronograma_' + currentUser, JSON.stringify(fallback));
+        mostrarModalRedirecionamento();
+      }
+    });
+
+    // ====== 10. Carregar dados salvos ======
+    const savedData = localStorage.getItem("userFormData_" + currentUser);
+    if (savedData) {
+      try {
+        const dados = JSON.parse(savedData);
+        document.getElementById("concurso").value = dados.concurso;
+        document.getElementById("materiaDificil").value = dados.materiaDificil;
+        document.getElementById("prioridade").value = dados.prioridade;
+        if (dados.materiaDificil2) {
+          document.getElementById("materiaDificil2").value = dados.materiaDificil2;
+        }
+
+        dados.disponibilidade.forEach((item) => {
+          const checkbox = Array.from(document.querySelectorAll('input[name="dia"]'))
+            .find((cb) => cb.value === item.dia);
+          if (checkbox) {
+            checkbox.checked = true;
+            const dayContainer = checkbox.closest(".day-schedule");
+            const timeBlocks = dayContainer.querySelector(".time-blocks");
+            timeBlocks.innerHTML = "";
+            item.horarios.forEach((horario) => {
+              const newGroup = document.createElement("div");
+              newGroup.className = "time-group";
+              newGroup.innerHTML = `
+                <input type="time" class="inicio" value="${horario.inicio}">
+                <input type="time" class="fim" value="${horario.fim}">
+                <button type="button" class="btn-remove-time">✕</button>
+              `;
+              timeBlocks.appendChild(newGroup);
+            });
+          }
+        });
+        setTimeout(initTimeButtons, 100);
+      } catch (e) {
+        console.error("Erro ao carregar dados:", e);
+      }
+    }
+
+    // ====== 11. Inicializa ======
+    document.addEventListener("DOMContentLoaded", () => {
+      initTimeButtons();
+    });
+  </script>
+
+  <!-- Botão Fixo "Ver Perfil" -->
+  <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000">
+    <button
+      class="btn btn-primary"
+      style="
+        padding: 14px 20px;
+        font-size: 1rem;
+        border-radius: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        min-width: 150px;
+      "
+      onclick="window.location.href='perfil.html'"
+    >
+      Ver Perfil
+    </button>
+  </div>
+</body>
 </html>
