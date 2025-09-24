@@ -76,43 +76,41 @@ OBS: as listas acima são amplas e devem ser utilizadas como fonte para gerar te
 
 Fim das instruções. Gere agora o JSON solicitado.
 `;
-  // Chama o Groq (Llama 3) em vez da Hugging Face
-const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-  method: "POST",
-  headers: {
-    "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    model: "llama3-70b-8192",
-    messages: [
-      { role: "system", content: "Você é uma IA especialista em vestibulares. Responda APENAS com JSON válido." },
-      { role: "user", content: prompt }
-    ],
-    temperature: 0.7,
-    max_tokens: 1000
-  })
-});
+try {
+    // Chama o Gemini
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      }
+    );
 
-if (!response.ok) throw new Error('Erro na API');
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('Erro no Gemini:', error);
+      return res.status(500).json({ error: 'Falha ao gerar cronograma' });
+    }
 
-const data = await response.json();
-const output = data.choices[0].message.content;
+    const data = await response.json();
+    const output = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-// Extrai JSON (mesmo se tiver markdown)
-let jsonString = output.trim();
-if (jsonString.startsWith("```json")) {
-  jsonString = jsonString.slice(7);
-  jsonString = jsonString.substring(0, jsonString.lastIndexOf("```"));
-} else if (jsonString.startsWith("```")) {
-  jsonString = jsonString.slice(3);
-  jsonString = jsonString.substring(0, jsonString.lastIndexOf("```"));
-}
+    if (!output) {
+      return res.status(500).json({ error: 'Gemini não retornou resposta' });
+    }
 
-// Garante que é um JSON válido
-const jsonStart = jsonString.indexOf("{");
-const jsonEnd = jsonString.lastIndexOf("}") + 1;
-jsonString = jsonString.slice(jsonStart, jsonEnd);
+    // Extrai JSON
+    const jsonStart = output.indexOf('{');
+    const jsonEnd = output.lastIndexOf('}') + 1;
+    const jsonString = output.slice(jsonStart, jsonEnd);
+    const cronograma = JSON.parse(jsonString);
 
-return JSON.parse(jsonString);
+    res.status(200).json(cronograma);
+  } catch (error) {
+    console.error('Erro interno:', error);
+    res.status(500).json({ error: 'Erro ao processar requisição' });
+  }
 }
