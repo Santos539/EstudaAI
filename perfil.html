@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil - Estuda.AI</title>
+    <style>
+      :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fa;
+        --text-primary: #212529;
+        --border-color: #dee2e6;
+        --btn-primary: #000000;
+        --btn-text: #ffffff;
+        --accent: #000000;
+        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --tag-basico: #28a745;
+        --tag-pro: #ffc107;
+        --tag-premium: #fd7e14;
+      }
+
+      [data-theme="dark"] {
+        --bg-primary: #121212;
+        --bg-secondary: #1e1e1e;
+        --text-primary: #f8f9fa;
+        --border-color: #444;
+        --btn-primary: #ffffff;
+        --btn-text: #000000;
+        --accent: #ffffff;
+        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        --tag-basico: #1d8b3c;
+        --tag-pro: #d39e00;
+        --tag-premium: #c86111;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.7;
+        transition: all 0.3s ease;
+        padding-bottom: 80px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Cabeçalho */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 20px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .logo img {
+        height: 60px;
+        border-radius: 50%;
+        border: 2px solid var(--accent);
+        cursor: pointer;
+      }
+
+      .header-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 10px 18px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: var(--btn-primary);
+        color: var(--btn-text);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--card-shadow);
+      }
+
+      /* Perfil */
+      .profile {
+        padding: 40px 20px;
+        text-align: center;
+      }
+
+      .profile h2 {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+      }
+
+      .profile p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 30px;
+      }
+
+      /* Plano do Usuário */
+      .user-plan {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 1rem;
+        margin-top: 10px;
+        color: white;
+      }
+
+      .plan-basico {
+        background: var(--tag-basico);
+      }
+      .plan-pro {
+        background: var(--tag-pro);
+      }
+      .plan-premium {
+        background: var(--tag-premium);
+      }
+
+      /* Tabela de Cronograma */
+      .schedule-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 30px 0;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .schedule-table th {
+        background: var(--btn-primary);
+        color: var(--btn-text);
+        padding: 15px;
+        text-align: left;
+      }
+
+      .schedule-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .check-btn {
+        background: transparent;
+        color: #adb5bd;
+        border: 2px solid #adb5bd;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .check-btn.done {
+        background: #28a745;
+        color: white;
+        border: none;
+      }
+
+      .block-done {
+        text-decoration: line-through;
+        opacity: 0.6;
+      }
+
+      /* Recurso bloqueado */
+      .bloqueado {
+        opacity: 0.6;
+        position: relative;
+      }
+
+      .bloqueado::after {
+        content: "🔒";
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        font-size: 1.2rem;
+        color: #dc3545;
+      }
+    </style>
+
+    <!-- Estilo dos modais -->
+    <style>
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .modal-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        max-width: 500px;
+        padding: 25px;
+        text-align: center;
+        position: relative;
+        transform: translateY(-20px);
+        transition: transform 0.3s ease;
+      }
+
+      .modal-overlay.show .modal {
+        transform: translateY(0);
+      }
+
+      .modal h3 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        color: var(--text-primary);
+      }
+
+      .modal p {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin-bottom: 20px;
+      }
+
+      .modal-btn {
+        background: var(--btn-primary);
+        color: var(--btn-text);
+        border: none;
+        padding: 10px 25px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+        margin: 0 5px;
+        transition: opacity 0.2s;
+      }
+
+      .modal-btn.cancel {
+        background: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+      }
+
+      .modal-btn:hover {
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Cabeçalho -->
+    <header>
+      <div class="logo" id="logo">
+        <img src="imagens/Logo Preta.png" alt="Estuda.AI" />
+      </div>
+      <div class="header-buttons">
+        <button class="btn btn-primary" id="themeToggle">Tema Escuro</button>
+        <button class="btn" id="logoutBtn">Sair</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- Perfil do Usuário -->
+      <section class="profile">
+        <h2 id="welcomeUser">Olá, Fulano!</h2>
+        <p>Abaixo está seu cronograma, com base nos dados fornecidos.</p>
+
+        <!-- Exibe o plano atual -->
+        <div id="planoUsuario"></div>
+      </section>
+
+      <!-- Tabela de Cronograma -->
+      <table class="schedule-table" id="scheduleTable">
+        <thead>
+          <tr>
+            <th>Dia</th>
+            <th>Horário</th>
+            <th>Matéria</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Preenchido pelo JS -->
+        </tbody>
+      </table>
+
+      <!-- Botão "Reiniciar Semana" CENTRALIZADO -->
+      <div style="text-align: center; margin: 40px 0">
+        <button
+          class="btn btn-primary"
+          style="
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            min-width: 200px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          "
+          id="resetWeek"
+        >
+          Reiniciar Semana
+        </button>
+      </div>
+    </div>
+
+    <!-- Botão Fixo "Editar Cronograma" -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000">
+      <button
+        class="btn btn-primary"
+        style="
+          padding: 14px 20px;
+          font-size: 1rem;
+          border-radius: 30px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          transition: all 0.3s ease;
+          min-width: 150px;
+        "
+        id="editSchedule"
+      >
+        Editar Cronograma
+      </button>
+    </div>
+
+    <!-- Modal: Confirmar Arquivamento -->
+    <div class="modal-overlay" id="archiveModal">
+      <div class="modal">
+        <h3>Arquivar Semana?</h3>
+        <p>
+          O cronograma será armazenado no histórico para você consultar depois.
+        </p>
+        <button class="modal-btn cancel" id="cancelArchive">Cancelar</button>
+        <button class="modal-btn" id="confirmArchive">Arquivar</button>
+      </div>
+    </div>
+
+    <!-- Modal: Sucesso ao arquivar -->
+    <div class="modal-overlay" id="successModal">
+      <div class="modal">
+        <h3>Semana Arquivada!</h3>
+        <p>A semana foi salva com sucesso no histórico.</p>
+        <button class="modal-btn" id="closeSuccess">OK</button>
+      </div>
+    </div>
+
+    <!-- Modal: Confirmar Reinício -->
+    <div class="modal-overlay" id="resetModal">
+      <div class="modal">
+        <h3>Reiniciar Semana?</h3>
+        <p>Todos os blocos voltarão ao status "não feito". Deseja continuar?</p>
+        <button class="modal-btn cancel" id="cancelReset">Cancelar</button>
+        <button class="modal-btn" id="confirmReset">Reiniciar</button>
+      </div>
+    </div>
+
+    <!-- Ações Avançadas -->
+    <div style="text-align: center; margin: 20px 0">
+      <button
+        class="btn btn-primary"
+        style="
+          padding: 12px 25px;
+          font-size: 1rem;
+          border-radius: 30px;
+          background: var(--btn-primary);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        "
+        id="archiveWeek"
+      >
+        Arquivar Semana
+      </button>
+      <button
+        class="btn btn-primary"
+        style="
+          padding: 12px 25px;
+          font-size: 1rem;
+          border-radius: 30px;
+          background: var(--btn-primary);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          margin-left: 10px;
+        "
+        id="newWeek"
+      >
+        Novo Cronograma
+      </button>
+    </div>
+
+    <div style="text-align: center; margin: 20px 0">
+      <button
+        class="btn btn-primary"
+        style="
+          padding: 12px 25px;
+          font-size: 1rem;
+          border-radius: 30px;
+          background: var(--btn-primary);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        "
+        id="viewHistory"
+      >
+        Ver Histórico de Semanas
+      </button>
+    </div>
+
+    <script>
+      // ====== 1. Verificação de Login ======
+      const currentUser = localStorage.getItem("currentUser");
+      if (!currentUser) {
+        alert("Você precisa estar logado.");
+        window.location.href = "login.html";
+      }
+
+      document.getElementById(
+        "welcomeUser"
+      ).textContent = `Olá, ${currentUser}!`;
+
+      // ====== 2. Inicializa tema ======
+      function initTheme() {
+        const body = document.body;
+        const themeToggle = document.getElementById("themeToggle");
+        const logo = document.querySelector(".logo img");
+        let isDark = localStorage.getItem("theme") === "dark";
+
+        function setTheme(dark) {
+          if (dark) {
+            body.setAttribute("data-theme", "dark");
+            themeToggle.textContent = "Tema Claro";
+            logo.src = "imagens/Logo Branca.png";
+          } else {
+            body.removeAttribute("data-theme");
+            themeToggle.textContent = "Tema Escuro";
+            logo.src = "imagens/Logo Preta.png";
+          }
+          localStorage.setItem("theme", dark ? "dark" : "light");
+        }
+
+        setTheme(isDark);
+
+        if (themeToggle) {
+          themeToggle.onclick = null;
+          themeToggle.addEventListener("click", () => {
+            isDark = !isDark;
+            setTheme(isDark);
+          });
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", initTheme);
+
+      // ====== 3. Função do modal personalizado ======
+      function mostrarMensagem(
+        titulo,
+        mensagem,
+        onConfirm = null,
+        showCancel = false
+      ) {
+        const modal = document.getElementById("successModal");
+        const modalTitle = modal.querySelector("h3");
+        const modalMessage = modal.querySelector("p");
+        const confirmBtn = document.getElementById("closeSuccess");
+        const cancelBtn = document.getElementById("cancelSuccess") || null;
+
+        modalTitle.textContent = titulo;
+        modalMessage.textContent = mensagem;
+
+        // Remove eventos antigos
+        confirmBtn.onclick = null;
+        if (cancelBtn) cancelBtn.onclick = null;
+
+        // Configura botões
+        confirmBtn.textContent = showCancel ? "Sim" : "OK";
+        confirmBtn.style.background = showCancel ? "#dc3545" : "";
+        confirmBtn.style.marginRight = showCancel ? "10px" : "";
+
+        confirmBtn.onclick = () => {
+          modal.classList.remove("show");
+          if (onConfirm) onConfirm();
+        };
+
+        if (showCancel && cancelBtn) {
+          cancelBtn.onclick = () => {
+            modal.classList.remove("show");
+          };
+          cancelBtn.style.display = "inline-block";
+        } else if (cancelBtn) {
+          cancelBtn.style.display = "none";
+        }
+
+        modal.classList.add("show");
+      }
+
+      // ====== 4. Logout e Navegação ======
+      document.getElementById("logoutBtn").onclick = () => {
+        mostrarMensagem(
+          "Sair da conta?",
+          `Deseja mesmo sair da conta de ${currentUser}?`,
+          () => {
+            localStorage.removeItem("currentUser");
+            window.location.href = "index.html";
+          },
+          true
+        );
+      };
+
+      document.getElementById("logo").addEventListener("click", () => {
+        window.location.href = "index.html";
+      });
+
+      // Botão "Editar Cronograma"
+      document.getElementById("editSchedule").onclick = () => {
+        window.location.href = "cronograma.html";
+      };
+
+      // ====== 5. Carregar plano do usuário ======
+      const userPlan =
+        localStorage.getItem("userPlan_" + currentUser) || "gratuito";
+
+      // Mapeia plano para nome exibido
+      const nomesPlanos = {
+        gratuito: "Teste Grátis",
+        basico: "Básico",
+        pro: "Pro",
+        premium: "Premium",
+      };
+
+      const coresPlanos = {
+        gratuito: "plan-basico",
+        basico: "plan-basico",
+        pro: "plan-pro",
+        premium: "plan-premium",
+      };
+
+      // Insere o plano na página
+      const planoDiv = document.getElementById("planoUsuario");
+      planoDiv.innerHTML = `
+  <span class="user-plan ${coresPlanos[userPlan]}">
+    Plano: ${nomesPlanos[userPlan]}
+  </span>
+`;
+
+      // Mensagem personalizada por plano
+      if (userPlan === "gratuito") {
+        // 🎯 Mensagem criativa para quem está no Teste Grátis
+        const msgCard = document.createElement("div");
+        msgCard.style.cssText = `
+    margin-top: 15px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1rem;
+    color: var(--text-primary);
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+  `;
+        msgCard.innerHTML = `
+    <p style="margin: 0; opacity: 0.9;">
+      <strong> Sua jornada começou!</strong><br>
+      Você está no <strong>Teste Grátis</strong>. Aproveite para montar seu cronograma e sentir na pele o poder da IA.
+    </p>
+    <p style="margin: 8px 0 0;">
+      <small style="opacity: 0.7;">O acesso completo expira em 7 dias.</small>
+    </p>
+    <p style="text-align: center; margin: 10px 0 0;">
+      <a href="planos.html" 
+         style="
+           display: inline-block;
+           background: var(--btn-primary);
+           color: var(--btn-text);
+           padding: 8px 16px;
+           border-radius: 6px;
+           font-size: 0.95rem;
+           text-decoration: none;
+           font-weight: 500;
+         ">
+        Ver Planos
+      </a>
+    </p>
+  `;
+        planoDiv.appendChild(msgCard);
+      } else {
+        // ✅ Para Básico, Pro ou Premium: mostrar plano atual + CTA claro
+        const upgradeCard = document.createElement("div");
+        upgradeCard.style.cssText = `
+    margin-top: 15px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1rem;
+    color: var(--text-primary);
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: var(--card-shadow);
+  `;
+
+        let btnText, infoText;
+
+        if (userPlan === "basico") {
+          btnText = "Atualizar para Pro";
+          infoText =
+            "Desbloqueie revisões automáticas, simulados e mais matérias prioritárias.";
+        } else if (userPlan === "pro") {
+          btnText = "Atualizar para Premium";
+          infoText =
+            "Tenha feedback detalhado, integração com Google Agenda e IA com memória.";
+        } else if (userPlan === "premium") {
+          btnText = "Você está no topo!";
+          infoText =
+            "Parabéns! Você tem acesso a todos os recursos do Estuda.AI.";
+        }
+
+        upgradeCard.innerHTML = `
+    <p style="margin: 0; opacity: 0.9;">
+      <strong>${infoText}</strong>
+    </p>
+    <p style="text-align: center; margin: 10px 0 0;">
+      <a href="planos.html" 
+         style="
+           display: inline-block;
+           background: ${
+             userPlan === "premium" ? "transparent" : "var(--btn-primary)"
+           };
+           color: ${
+             userPlan === "premium" ? "var(--accent)" : "var(--btn-text)"
+           };
+           padding: 8px 16px;
+           border-radius: 6px;
+           font-size: 0.95rem;
+           text-decoration: none;
+           font-weight: 500;
+           border: ${
+             userPlan === "premium" ? "1px solid var(--accent)" : "none"
+           };
+         ">
+        ${btnText}
+      </a>
+    </p>
+  `;
+
+        planoDiv.appendChild(upgradeCard);
+      }
+      // ====== 6. Carregar dados do cronograma ======
+      const savedData = localStorage.getItem("userFormData_" + currentUser);
+      const userData = savedData ? JSON.parse(savedData) : null;
+
+      // Carrega o cronograma da IA
+      const iaCronogramaStr = localStorage.getItem(
+        "ia_cronograma_" + currentUser
+      );
+      let iaCronograma = null;
+      try {
+        if (iaCronogramaStr)
+          iaCronograma = JSON.parse(iaCronogramaStr).cronograma || null;
+      } catch (e) {
+        console.error("Erro ao parsear cronograma da IA:", e);
+      }
+
+      if (!userData) {
+        document.querySelector(".schedule-table tbody").innerHTML = `
+      <tr><td colspan="4" style="text-align:center; padding:20px;">
+        Nenhum dado encontrado. Vá ao cronograma e salve seus horários.
+      </td></tr>`;
+      } else {
+        renderSchedule(userData, iaCronograma);
+      }
+
+      // ====== 7. Renderizar tabela com IA ======
+      function renderSchedule(data, iaCronograma) {
+        const tbody = document.querySelector(".schedule-table tbody");
+        tbody.innerHTML = "";
+
+        data.disponibilidade.forEach((dia) => {
+          dia.horarios.forEach((horario, index) => {
+            const row = document.createElement("tr");
+
+            // Dia
+            const tdDia = document.createElement("td");
+            tdDia.textContent = dia.dia;
+            if (index > 0) tdDia.style.opacity = "0.6";
+
+            // Horário
+            const tdHora = document.createElement("td");
+            tdHora.textContent = `${horario.inicio} – ${horario.fim}`;
+
+            // Matéria (com IA)
+            const tdMateria = document.createElement("td");
+
+            // Formata o horário para comparar (garante 2 dígitos)
+            const inicioFormatado = horario.inicio.padStart(5, "0");
+            const blocoIA = iaCronograma?.find(
+              (b) => b.dia === dia.dia && b.horario.includes(inicioFormatado)
+            );
+
+            if (blocoIA) {
+              tdMateria.textContent = `${blocoIA.materia} — ${
+                blocoIA.tema
+              } (${capitalize(blocoIA.tipo)})`;
+            } else {
+              tdMateria.textContent = "Matemática (Teoria e Exercícios)";
+            }
+
+            // Botão de status
+            const tdAction = document.createElement("td");
+            const checkBtn = document.createElement("button");
+            checkBtn.className = "check-btn";
+            checkBtn.innerHTML = "○"; // Inicialmente não feito
+
+            const stateKey = `done_${currentUser}_${dia.dia}_${horario.inicio}`;
+            const isDone = localStorage.getItem(stateKey) === "true";
+
+            if (isDone) {
+              checkBtn.classList.add("done");
+              checkBtn.innerHTML = "✓";
+              tdMateria.classList.add("block-done");
+            }
+
+            checkBtn.onclick = () => {
+              const done = !checkBtn.classList.contains("done");
+              localStorage.setItem(stateKey, done);
+
+              if (done) {
+                checkBtn.classList.add("done");
+                checkBtn.innerHTML = "✓";
+                tdMateria.classList.add("block-done");
+              } else {
+                checkBtn.classList.remove("done");
+                checkBtn.innerHTML = "○";
+                tdMateria.classList.remove("block-done");
+              }
+            };
+
+            tdAction.appendChild(checkBtn);
+            row.appendChild(tdDia);
+            row.appendChild(tdHora);
+            row.appendChild(tdMateria);
+            row.appendChild(tdAction);
+            tbody.appendChild(row);
+          });
+        });
+      }
+
+      // Função auxiliar
+      function capitalize(str) {
+        return str ? str.charAt(0).toUpperCase() + str.slice(1) : str;
+      }
+
+      // ====== 8. Reiniciar semana com confirmação ======
+      document.getElementById("resetWeek").onclick = () => {
+        const resetModal = document.getElementById("resetModal");
+        const confirmBtn = document.getElementById("confirmReset");
+        const cancelBtn = document.getElementById("cancelReset");
+
+        // Remove eventos antigos
+        confirmBtn.onclick = null;
+        cancelBtn.onclick = null;
+
+        confirmBtn.onclick = () => {
+          resetModal.classList.remove("show");
+          document.querySelectorAll(".check-btn").forEach((btn) => {
+            btn.classList.remove("done");
+            btn.innerHTML = "○";
+            const materia = btn.closest("tr").querySelector("td:nth-child(3)");
+            materia.classList.remove("block-done");
+          });
+
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith(`done_${currentUser}_`)) {
+              localStorage.removeItem(key);
+            }
+          }
+        };
+
+        cancelBtn.onclick = () => {
+          resetModal.classList.remove("show");
+        };
+
+        resetModal.onclick = (e) => {
+          if (e.target === resetModal) {
+            resetModal.classList.remove("show");
+          }
+        };
+
+        resetModal.classList.add("show");
+      };
+
+      // ====== 9. Arquivar semana ======
+      document.getElementById("archiveWeek").onclick = () => {
+        const archiveModal = document.getElementById("archiveModal");
+        const confirmBtn = document.getElementById("confirmArchive");
+        const cancelBtn = document.getElementById("cancelArchive");
+
+        confirmBtn.onclick = null;
+        cancelBtn.onclick = null;
+
+        confirmBtn.onclick = () => {
+          archiveModal.classList.remove("show");
+
+          const userData = localStorage.getItem("userFormData_" + currentUser);
+          const weekCountKey = `weekCount_${currentUser}`;
+          const currentWeek = parseInt(
+            localStorage.getItem(weekCountKey) || "1"
+          );
+
+          if (userData) {
+            localStorage.setItem(
+              `archived_week_${currentUser}_${currentWeek}`,
+              userData
+            );
+            localStorage.setItem(
+              `archived_progress_${currentUser}_${currentWeek}`,
+              JSON.stringify(getAllDoneStates())
+            );
+            localStorage.setItem(weekCountKey, currentWeek + 1);
+          }
+
+          // Mostra sucesso
+          const successModal = document.getElementById("successModal");
+          const closeBtn = document.getElementById("closeSuccess");
+          closeBtn.onclick = null;
+          closeBtn.onclick = () => {
+            successModal.classList.remove("show");
+          };
+          successModal.onclick = (e) => {
+            if (e.target === successModal)
+              successModal.classList.remove("show");
+          };
+          successModal.classList.add("show");
+        };
+
+        cancelBtn.onclick = () => {
+          archiveModal.classList.remove("show");
+        };
+
+        archiveModal.onclick = (e) => {
+          if (e.target === archiveModal) {
+            archiveModal.classList.remove("show");
+          }
+        };
+
+        archiveModal.classList.add("show");
+      };
+
+      // Fecha o modal de sucesso
+      document.getElementById("closeSuccess").onclick = () => {
+        document.getElementById("successModal").classList.remove("show");
+      };
+
+      // Impede fechar clicando fora no sucesso
+      document.getElementById("successModal").onclick = (e) => {
+        if (e.target === document.getElementById("successModal")) {
+          document.getElementById("successModal").classList.remove("show");
+        }
+      };
+
+      // ====== 10. Pegar todos os blocos feitos ======
+      function getAllDoneStates() {
+        const states = {};
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith(`done_${currentUser}_`)) {
+            states[key] = localStorage.getItem(key);
+          }
+        }
+        return states;
+      }
+
+      // ====== 11. Novo cronograma ======
+      document.getElementById("newWeek").onclick = () => {
+        const newModal = document.getElementById("archiveModal");
+        newModal.querySelector("h3").textContent = "Novo Cronograma";
+        newModal.querySelector("p").textContent =
+          "Seu progresso atual será reiniciado. Deseja continuar?";
+
+        const confirmBtn = document.getElementById("confirmArchive");
+        const cancelBtn = document.getElementById("cancelArchive");
+
+        confirmBtn.onclick = null;
+        cancelBtn.onclick = null;
+
+        confirmBtn.textContent = "Continuar";
+        confirmBtn.onclick = () => {
+          newModal.classList.remove("show");
+          window.location.href = "cronograma.html";
+        };
+
+        cancelBtn.onclick = () => {
+          newModal.classList.remove("show");
+        };
+
+        newModal.onclick = (e) => {
+          if (e.target === newModal) {
+            newModal.classList.remove("show");
+          }
+        };
+
+        newModal.classList.add("show");
+      };
+
+      // ====== 12. Botão "Ver Histórico" ======
+      document.getElementById("viewHistory").onclick = () => {
+        window.location.href = "historico.html";
+      };
+      // ====== 13. Exportar PDF (disponível a partir do Básico) ======
+      const exportBtn = document.createElement("button");
+      exportBtn.textContent = "Exportar para PDF";
+      exportBtn.className = "btn";
+      exportBtn.style.margin = "20px auto";
+      exportBtn.style.display = "block";
+      document.querySelector(".container").appendChild(exportBtn);
+
+      exportBtn.addEventListener("click", () => {
+        if (userPlan === "gratuito") {
+          mostrarMensagem(
+            "Recurso Bloqueado",
+            "O recurso de exportação para PDF está disponível a partir do plano Básico. Atualize seu plano para desbloquear.",
+            () => {
+              window.location.href = "planos.html";
+            },
+            true
+          );
+        } else {
+          window.print();
+        }
+      });
+    </script>
+  </body>
+</html>
