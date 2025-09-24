@@ -78,52 +78,36 @@ Fim das instruções. Gere agora o JSON solicitado.
 `;
 
   try {
-    // Chama a Hugging Face
-    const hfResponse = await fetch("https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.HF_TOKEN}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        inputs: prompt,
-        parameters: {
-          max_new_tokens: 1000,
-          temperature: 0.7,
-          return_full_text: false
-        }
-      })
-    });
+  const response = await fetch("https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.HF_TOKEN}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      inputs: prompt,
+      parameters: {
+        max_new_tokens: 1000,
+        temperature: 0.7,
+        return_full_text: false
+      }
+    })
+  });
 
-    if (!hfResponse.ok) {
-      const error = await hfResponse.json();
-      console.error("Erro na API da Hugging Face:", error);
-      return res.status(500).json({ error: "Falha ao gerar cronograma com IA" });
-    }
+  if (!response.ok) throw new Error('Erro na API');
 
-    const data = await hfResponse.json();
-    const output = data.generated_text || data[0]?.generated_text;
+  const data = await response.json();
+  const output = data.generated_text || data[0]?.generated_text;
 
-    // Extrai JSON da resposta
-    const jsonStart = output.indexOf('{');
-    const jsonEnd = output.lastIndexOf('}') + 1;
-    
-    if (jsonStart === -1 || jsonEnd === 0) {
-      return res.status(500).json({ error: "IA não retornou JSON válido" });
-    }
+  // Extrai JSON
+  const jsonStart = output.indexOf('{');
+  const jsonEnd = output.lastIndexOf('}') + 1;
+  const jsonString = output.slice(jsonStart, jsonEnd);
+  const cronograma = JSON.parse(jsonString);
 
-    const jsonString = output.slice(jsonStart, jsonEnd);
-    const cronograma = JSON.parse(jsonString);
-
-    // Validação extra: garante que todos os blocos foram preenchidos
-    if (!Array.isArray(cronograma.cronograma)) {
-      return res.status(500).json({ error: "Formato de resposta inválido" });
-    }
-
-    // Retorna o cronograma para o frontend
-    res.status(200).json(cronograma);
-  } catch (error) {
-    console.error("Erro interno:", error);
-    res.status(500).json({ error: "Erro ao processar requisição" });
-  }
+  res.status(200).json(cronograma);
+} catch (error) {
+  console.error("Erro:", error);
+  res.status(500).json({ error: "Falha ao gerar cronograma" });
+}
 }
