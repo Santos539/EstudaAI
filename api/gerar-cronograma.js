@@ -79,21 +79,21 @@ Fim das instruções. Gere agora o JSON solicitado.
 
   try {
   const response = await fetch("https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.HF_TOKEN}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      inputs: prompt,
-      parameters: {
-        max_new_tokens: 1000,
-        temperature: 0.7,
-        return_full_text: false
-      }
-    })
-  });
-
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${process.env.HF_TOKEN}`,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    inputs: prompt,
+    parameters: {
+      max_new_tokens: 800,
+      temperature: 0.7,
+      top_p: 0.95,
+      do_sample: true
+    }
+  })
+});
   if (!response.ok) throw new Error('Erro na API');
 
   const data = await response.json();
@@ -111,3 +111,19 @@ Fim das instruções. Gere agora o JSON solicitado.
   res.status(500).json({ error: "Falha ao gerar cronograma" });
 }
 }
+// Extrai JSON da resposta
+let jsonString = output.trim();
+
+if (jsonString.startsWith("```json")) {
+  // Remove markdown code block
+  jsonString = jsonString.slice(7);
+  jsonString = jsonString.substring(0, jsonString.lastIndexOf("```"));
+} else if (jsonString.startsWith("```")) {
+  jsonString = jsonString.slice(3);
+  jsonString = jsonString.substring(0, jsonString.lastIndexOf("```"));
+}
+
+// Garante que começa com { e termina com }
+jsonString = jsonString.substring(jsonString.indexOf("{"), jsonString.lastIndexOf("}") + 1);
+
+return JSON.parse(jsonString);
