@@ -950,6 +950,40 @@
           window.print();
         }
       });
+      // Adiciona botão de debug
+      const debugBtn = document.createElement("button");
+      debugBtn.textContent = "🔄 Testar IA";
+      debugBtn.className = "btn";
+      debugBtn.style.margin = "10px auto";
+      debugBtn.style.display = "block";
+      document.querySelector(".container").appendChild(debugBtn);
+
+      debugBtn.onclick = async () => {
+        try {
+          const response = await fetch("/api/gerar-cronograma", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              concurso: "enem",
+              materiaDificil: "matematica",
+              prioridade: 50,
+              disponibilidade: [
+                {
+                  dia: "Segunda",
+                  horarios: [{ inicio: "18:00", fim: "19:00" }],
+                },
+              ],
+            }),
+          });
+
+          const data = await response.json();
+          console.log("Resposta da IA:", data);
+          alert("Veja o console (F12) para ver a resposta da IA");
+        } catch (e) {
+          console.error("Erro ao testar IA:", e);
+          alert("Erro: veja o console");
+        }
+      };
     </script>
   </body>
 </html>
