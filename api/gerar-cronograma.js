@@ -6,7 +6,8 @@ export default async function handler(req, res) {
 
   const { concurso, materiaDificil, prioridade, disponibilidade } = req.body;
 
-  // Seu prompt completo
+  // Preenche o prompt com os dados do usuário
+  const blocosJson = JSON.stringify(disponibilidade);
   const prompt = `
 Você é uma IA especialista em vestibulares (ENEM, UERJ e Fuvest). Sua tarefa: 
 GERAR UM CRONOGRAMA DE ESTUDOS DETALHADO em JSON, mapeando cada BLOCO DISPONÍVEL para:
@@ -15,9 +16,9 @@ GERAR UM CRONOGRAMA DE ESTUDOS DETALHADO em JSON, mapeando cada BLOCO DISPONÍVE
 - "tipo" (uma entre: "teoria", "exercício", "revisão", "redação").
 
 ===== INFORMAÇÕES DO ALUNO =====
-Concurso: {CONCURSO}
-Matéria de maior dificuldade: {MATERIA_DIFICIL} (prioridade {PRIORIDADE}%)
-Blocos disponíveis (JSON): {BLOCOS_JSON}
+Concurso: ${concurso}
+Matéria de maior dificuldade: ${materiaDificil} (prioridade ${prioridade}%)
+Blocos disponíveis (JSON): ${blocosJson}
 ===============================
 
 REGRAS OBRIGATÓRIAS:
@@ -29,7 +30,7 @@ REGRAS OBRIGATÓRIAS:
   ]
 }
 2) Para cada bloco disponível, preencha um item do array "cronograma". Não deixe blocos sem conteúdo.
-3) Priorize a matéria marcada como {MATERIA_DIFICIL} proporcionalmente ({PRIORIDADE}%) na distribuição semanal,
+3) Priorize a matéria marcada como ${materiaDificil} proporcionalmente (${prioridade}%) na distribuição semanal,
    mas cubra também os demais tópicos do concurso escolhido.
 4) Intercale teoria/exercício/revisão/redação conforme apropriado (ex: depois de 2 blocos de teoria, colocar um de exercício).
 5) Divida blocos longos em sub-blocos de 50min e adote 10min de intervalo, com status de "descanso" (foi feito no frontend) — use os horários recebidos. 
@@ -96,14 +97,31 @@ Fim das instruções. Gere agora o JSON solicitado.
     }
 
     const data = await response.json();
-    const output = data.generated_text || data[0]?.generated_text;
+    // Garante que output seja string
+    const output = typeof data === "string"
+      ? data
+      : data.generated_text || data[0]?.generated_text || "";
 
-    // Extrai JSON
-    const jsonStart = output.indexOf('{');
-    const jsonEnd = output.lastIndexOf('}') + 1;
-    const jsonString = output.slice(jsonStart, jsonEnd);
+    // Tenta extrair JSON válido do output
+    let cronogramaJson = null;
+    try {
+      const jsonStart = output.indexOf('{');
+      const jsonEnd = output.lastIndexOf('}') + 1;
+      if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+        const jsonString = output.slice(jsonStart, jsonEnd);
+        cronogramaJson = JSON.parse(jsonString);
+      }
+    } catch (parseError) {
+      console.error("Erro ao fazer parse do JSON:", parseError, "Output:", output);
+      return res.status(500).json({ error: "Falha ao interpretar resposta da IA" });
+    }
 
-    return res.status(200).json(JSON.parse(jsonString));
+    if (!cronogramaJson) {
+      console.error("Resposta inesperada da IA:", output);
+      return res.status(500).json({ error: "Resposta da IA não contém JSON válido" });
+    }
+
+    return res.status(200).json(cronogramaJson);
   } catch (error) {
     console.error("Erro ao chamar IA:", error);
     return res.status(500).json({ error: "Erro ao processar requisição" });
